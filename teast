@@ -137,7 +137,6 @@ local Toggle = MainTab:CreateToggle({
             }
         }
 
-        local firing = false
         local connection
 
         local function fireCursedEnergy()
@@ -145,13 +144,13 @@ local Toggle = MainTab:CreateToggle({
         end
 
         if Value then
-            firing = true
             connection = game:GetService("RunService").Heartbeat:Connect(fireCursedEnergy)
-        else
-            firing = false
-            if connection then
-                connection:Disconnect()
-            end
+        elseif connection then
+            connection:Disconnect()
         end
     end,
 })
+
+-- Example of turning off the toggle after some time (replace this with your actual usage)
+wait(5)
+Toggle:Set(false)
