@@ -123,7 +123,7 @@ local ButtonToggleStamina = MainTab:CreateButton({
 local Toggle = MainTab:CreateToggle({
     Name = "Auto Curse Energy",
     CurrentValue = false,
-    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Flag = "Toggle1",
     Callback = function(Value)
         local LocalPlayer = game:GetService("Players").LocalPlayer
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -140,17 +140,18 @@ local Toggle = MainTab:CreateToggle({
         local firing = false
 
         local function fireCursedEnergy()
-            CombatEvent:FireServer(unpack(args))
+            while firing do
+                CombatEvent:FireServer(unpack(args))
+                wait(0.1)  -- Add a delay of 0.1 seconds
+            end
         end
 
         if Value then
             firing = true
-            while firing do
-                fireCursedEnergy()
-                wait(0.1)  -- Add a delay of 0.1 seconds
-            end
+            fireCursedEnergy()
         else
             firing = false
         end
     end,
 })
+
