@@ -1,0 +1,138 @@
+-- Load the Rayfield library
+local Rayfield = loadstring(game:HttpGet("https://sirius.menu/rayfield"))()
+
+-- Create a window for the script
+local Window = Rayfield:CreateWindow({
+    Name = "🧙🏻 Jujutsu Chronicles By Blockama",
+    LoadingTitle = "Joseph Hub",
+    LoadingSubtitle = "by Blockama",
+    ConfigurationSaving = {
+        Enabled = false,
+        FolderName = nil,
+        FileName = "Joseph Hub"
+    },
+    Discord = {
+        Enabled = false,
+        Invite = "noinvitelink",
+        RememberJoins = true
+    },
+    KeySystem = false,
+    KeySettings = {
+        Title = "Untitled",
+        Subtitle = "Key System",
+        Note = "No method of obtaining the key is provided",
+        FileName = "Key",
+        SaveKey = true,
+        GrabKeyFromSite = false,
+        Key = {"Hello"}
+    }
+})
+
+-- Create the "Auto Farm" tab
+local MainTab = Window:CreateTab("Auto Farm", nil)
+
+-- Create a section for the "Fruits" in the Auto Farm tab
+local MainSection = MainTab:CreateSection("Auto Farm")
+
+-- Notify the user about script execution
+Rayfield:Notify({
+    Title = "You executed the script!",
+    Content = "Updated made by Blockama on YouTube",
+    Duration = 6.5,
+    Image = 4483362458,
+    Actions = {
+        Ignore = {
+            Name = "Best Script!",
+            Callback = function()
+                print("The user tapped Okay!")
+            end
+        }
+    }
+})
+
+-- Auto Farm functionality
+local autoFarmEnabled = false
+local ButtonToggleFarm = MainTab:CreateButton({
+    Name = "Toggle Auto Farm (RESET CHARACTER TO DISABLE) MADE BY BLOCKAMA",
+    Callback = function()
+        local Player = game:GetService("Players").LocalPlayer
+        local Character = Player.Character or Player.CharacterAdded:Wait()
+        local Mouse = Player:GetMouse()
+        local ReplicatedStorage = game:GetService("ReplicatedStorage")
+        local CombatEvent = ReplicatedStorage.Events.CombatEvent
+        local Dummy = workspace:WaitForChild("Dummy")
+        local HitboxSize = Vector3.new(5, 5, 5)
+
+        for _, part in pairs(Dummy:GetDescendants()) do
+            if part:IsA("BasePart") then
+                part.Size = HitboxSize
+            end
+        end
+
+        local args = {
+            [1] = {
+                Character = Character,
+                Action = "M1",
+                Combo = 1,
+                Target = Dummy,
+                BehindPlayer = false
+            }
+        }
+
+        local teleporting = true
+        while teleporting do
+            local TeleportPosition = Dummy.HumanoidRootPart.Position + Vector3.new(0, 5, 0)
+            wait(0.005)
+            Character:SetPrimaryPartCFrame(CFrame.new(TeleportPosition))
+            wait(0.005)
+            CombatEvent:FireServer(unpack(args))
+            wait(0.005)
+        end
+
+        local function onKeyPress(key)
+            if key == "x" then
+                teleporting = false
+            end
+        end
+
+        Mouse.KeyDown:Connect(onKeyPress)
+    end
+})
+
+-- Toggle Infinite Stamina button
+local ButtonToggleStamina = MainTab:CreateButton({
+    Name = "Toggle Infinite Stamina",
+    Callback = function()
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        local Character = LocalPlayer.Character
+
+        local function fireEventWithDelay()
+            local RewardStamina = Character.Client.Server.RewardStamina
+            RewardStamina:FireServer()
+            wait(0.1)
+        end
+
+        for i = 1, 50 do
+            fireEventWithDelay()
+        end
+    end
+})
+
+local Toggle = MainTab:CreateToggle({
+    Name = "Auto Curse Energy",
+    CurrentValue = false,
+    Flag = "Toggle1", -- A flag is the identifier for the configuration file, make sure every element has a different flag if you're using configuration saving to ensure no overlaps
+    Callback = function(Value)
+        local LocalPlayer = game:GetService("Players").LocalPlayer
+        local args = {
+            [1] = {
+                ["Character"] = LocalPlayer.Character,
+                ["Action"] = "Cursed_Energy",
+                ["MiscData"] = LocalPlayer:WaitForChild("UIStats")
+            }
+        }
+
+        game:GetService("ReplicatedStorage"):WaitForChild("Events"):WaitForChild("CombatEvent"):FireServer(unpack(args))
+    end,
+})
