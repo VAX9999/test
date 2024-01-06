@@ -140,18 +140,21 @@ local Toggle = MainTab:CreateToggle({
         local firing = false
 
         local function fireCursedEnergy()
+            CombatEvent:FireServer(unpack(args))
+        end
+
+        local function toggleCursedEnergy()
             while firing do
-                CombatEvent:FireServer(unpack(args))
+                fireCursedEnergy()
                 wait(0.1)  -- Add a delay of 0.1 seconds
             end
         end
 
         if Value then
             firing = true
-            fireCursedEnergy()
+            spawn(toggleCursedEnergy)
         else
             firing = false
         end
     end,
 })
-
